@@ -9,6 +9,12 @@ export const authConfig = {
   database: prismaAdapter(prisma, {
     provider: "sqlite",
   }),
+  socialProviders: {
+    github: {
+      clientId: process.env.AUTH_GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.AUTH_GITHUB_SECRET as string,
+    },
+  },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
@@ -17,7 +23,7 @@ export const authConfig = {
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, token }) => {
-      const verificationUrl = `${process.env.BETTER_AUTH_URL}/api/auth/verify-email?token=${token}&callbackURL=${process.env.EMAIL_VERIFICATION_CALLBACK_URL}`;
+      const verificationUrl = `${process.env.BASE_URL}/api/auth/verify-email?token=${token}&callbackURL=${process.env.BASE_URL}/email-verified`;
 
       await sendEmail({
         to: user.email,

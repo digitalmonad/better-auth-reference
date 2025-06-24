@@ -1,6 +1,7 @@
 import { authClient } from "@/auth/auth-client";
 import { signInSchema } from "@/auth/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ErrorContext } from "better-auth/react";
 import { useRouter } from "next/navigation";
 
 import { useState } from "react";
@@ -47,30 +48,29 @@ export const useSignInForm = () => {
     setPendingCredentials(false);
   };
 
-  //   const handleSignInWithGithub = async () => {
-  //     await authClient.signIn.social(
-  //       {
-  //         provider: "github",
-  //       },
-  //       {
-  //         onRequest: () => {
-  //           setPendingGithub(true);
-  //         },
-  //         onSuccess: async () => {
-  //           router.push("/");
-  //           router.refresh();
-  //         },
-  //         onError: (ctx: ErrorContext) => {
-  //           toast.warning(ctx.error.message ?? "Something went wrong.");
-  //         },
-  //       }
-  //     );
-  //     setPendingGithub(false);
-  //   };
+  const handleSignInWithGithub = async () => {
+    await authClient.signIn.social(
+      {
+        provider: "github",
+      },
+      {
+        onRequest: () => {
+          setPendingGithub(true);
+        },
+
+        onError: (ctx: ErrorContext) => {
+          toast.warning(ctx.error.message ?? "Something went wrong.");
+        },
+      }
+    );
+    setPendingGithub(false);
+  };
 
   return {
     handleCredentialsSignIn,
+    handleSignInWithGithub,
     form,
     pendingCredentials,
+    pendingGithub,
   };
 };
