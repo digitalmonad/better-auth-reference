@@ -1,12 +1,11 @@
 "use client";
-
 import Link from "next/link";
 import SignoutButton from "@/components/sign-out-button";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/auth/auth-client";
 
 export default function AuthButtons() {
-  const isPending = false;
-  const session = false;
+  const { data: session, isPending } = authClient.useSession();
   if (isPending) return <div>Loading...</div>;
 
   return !session ? (

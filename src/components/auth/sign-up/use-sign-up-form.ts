@@ -1,19 +1,3 @@
-"use client";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import LoadingButton from "@/components/loading-button";
-
-import Link from "next/link";
-
 import { signUpSchema } from "@/auth/auth.schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,7 +6,7 @@ import { authClient } from "@/auth/auth-client";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export const useSignUpform = () => {
+export const useSignUpForm = () => {
   const [pending, setPending] = useState(false);
 
   const form = useForm<z.infer<typeof signUpSchema>>({

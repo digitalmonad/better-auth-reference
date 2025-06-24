@@ -1,10 +1,10 @@
 import { sendEmail } from "@/actions/email";
 import prisma from "@/lib/prisma";
-import { betterAuth, BetterAuthOptions } from "better-auth";
+import { BetterAuthOptions } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { openAPI } from "better-auth/plugins";
 
-export const auth = betterAuth({
+export const authConfig = {
   plugins: [openAPI()],
   database: prismaAdapter(prisma, {
     provider: "sqlite",
@@ -26,4 +26,4 @@ export const auth = betterAuth({
       });
     },
   },
-} satisfies BetterAuthOptions);
+} satisfies BetterAuthOptions;
