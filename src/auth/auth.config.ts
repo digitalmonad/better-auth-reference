@@ -15,6 +15,34 @@ export const authConfig = {
       clientSecret: process.env.AUTH_GITHUB_SECRET as string,
     },
   },
+  user: {
+    additionalFields: {
+      premium: {
+        type: "boolean",
+        required: true,
+      },
+    },
+  },
+  session: {
+    expiresIn: 60 * 60 * 24 * 7, // 7 days
+    updateAge: 60 * 60 * 24, // 1 day (updates every 1 day)
+    cookieCache: {
+      // get the session from cookie not from the database each time when checking the session
+      enabled: true,
+      maxAge: 5 * 60,
+    },
+  },
+  rateLimit: {
+    enabled: true, // enable in development mode
+    window: 60, // time window in seconds
+    max: 100,
+    customRules: {
+      "/sign-in/email": {
+        window: 10,
+        max: 3,
+      },
+    },
+  },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
