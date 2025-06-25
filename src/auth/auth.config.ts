@@ -3,9 +3,10 @@ import prisma from "@/lib/prisma";
 import { BetterAuthOptions } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { openAPI } from "better-auth/plugins";
+import { admin } from "better-auth/plugins";
 
 export const authConfig = {
-  plugins: [openAPI()],
+  plugins: [openAPI(), admin()],
   database: prismaAdapter(prisma, {
     provider: "sqlite",
   }),
@@ -19,7 +20,7 @@ export const authConfig = {
     additionalFields: {
       premium: {
         type: "boolean",
-        required: true,
+        required: false,
       },
     },
   },
@@ -50,7 +51,7 @@ export const authConfig = {
       await sendEmail({
         to: user.email,
         subject: "Reset your password",
-        text: `Click the link to reset your password: ${url}`,
+        text: `Click the link to reset your password: <a href=${url}>LINK</a>`,
       });
     },
   },

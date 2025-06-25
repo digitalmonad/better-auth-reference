@@ -37,7 +37,7 @@ export async function sendEmail({
       from: process.env.EMAIL_FROM, // Sender email
       to: to.toLowerCase().trim(), // Recipient email
       subject: subject.trim(), // Email subject
-      text: text.trim(), // Plain text body
+      html: text.trim(), // Plain text body
     });
 
     return {

@@ -11,6 +11,7 @@ export default function LoadingButton({
   return (
     <Button
       onClick={onClick}
+      size={"sm"}
       className="w-full"
       type="submit"
       disabled={pending}

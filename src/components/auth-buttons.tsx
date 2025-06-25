@@ -12,10 +12,10 @@ export default function AuthButtons() {
   return !session ? (
     <div className="flex gap-2 justify-center">
       <Link href="/sign-in">
-        <Button>Sign In</Button>
+        <Button size={"sm"}>Sign In</Button>
       </Link>
       <Link href="/sign-up">
-        <Button>Sign Up</Button>
+        <Button size={"sm"}>Sign Up</Button>
       </Link>
     </div>
   ) : (
