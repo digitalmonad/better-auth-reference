@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: better-auth-mailpit
+    restart: unless-stopped
+    ports:
+      - "1025:1025"  # SMTP server
+      - "8025:8025"  # Web UI
+    environment:
+      # Accept any authentication (useful for dev)
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+      # Maximum messages to store
+      MP_MAX_MESSAGES: 5000
+      # Optional: Store messages in a volume
+      # MP_DATA_FILE: /data/mailpit.db
+    # volumes:
+    #   - mailpit-data:/data
+    networks:
+      - better-auth
+
+networks:
+  better-auth:
+    driver: bridge
+
+# Uncomment to persist emails across restarts
+# volumes:
+#   mailpit-data:

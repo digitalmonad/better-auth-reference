@@ -2,7 +2,20 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+### 1. Setup Environment
+
+Copy `.env.example` to `.env` and fill in the required values.
+
+### 2. Start Mailpit (for email testing)
+
+```bash
+docker compose up -d
+```
+
+📧 **Mailpit UI:** http://localhost:8025  
+See [MAILPIT.md](MAILPIT.md) for more details.
+
+### 3. Run the development server
 
 ```bash
 npm run dev

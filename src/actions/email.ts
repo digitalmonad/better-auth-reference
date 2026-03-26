@@ -11,24 +11,38 @@ export async function sendEmail({
   subject: string;
   text: string;
 }) {
-  if (!process.env.MAILTRAP_USERNAME || !process.env.MAILTRAP_PASSWORD) {
-    throw new Error(
-      "MAILTRAP_USERNAME or MAILTRAP_PASSWORD environment variable are not set"
-    );
-  }
-
   if (!process.env.EMAIL_FROM) {
     throw new Error("EMAIL_FROM environment variable is not set");
   }
 
-  // Create Nodemailer transporter for Mailtrap SMTP
+  // Support both Mailpit (local) and Mailtrap (cloud)
+  const isMailpit =
+    process.env.SMTP_HOST === "localhost" ||
+    process.env.SMTP_HOST === "mailpit";
+  const host = process.env.SMTP_HOST || "sandbox.smtp.mailtrap.io";
+  const port = parseInt(process.env.SMTP_PORT || "2525");
+
+  // Validate auth for Mailtrap, optional for Mailpit
+  if (
+    !isMailpit &&
+    (!process.env.MAILTRAP_USERNAME || !process.env.MAILTRAP_PASSWORD)
+  ) {
+    throw new Error(
+      "MAILTRAP_USERNAME and MAILTRAP_PASSWORD are required when not using Mailpit",
+    );
+  }
+
+  // Create Nodemailer transporter
   const transport = nodemailer.createTransport({
-    host: "sandbox.smtp.mailtrap.io",
-    port: 2525, // or 587, 465 depending on your Mailtrap settings
-    auth: {
-      user: process.env.MAILTRAP_USERNAME,
-      pass: process.env.MAILTRAP_PASSWORD,
-    },
+    host,
+    port,
+    auth:
+      process.env.MAILTRAP_USERNAME && process.env.MAILTRAP_PASSWORD
+        ? {
+            user: process.env.MAILTRAP_USERNAME,
+            pass: process.env.MAILTRAP_PASSWORD,
+          }
+        : undefined, // No auth needed for local Mailpit
   });
 
   try {
