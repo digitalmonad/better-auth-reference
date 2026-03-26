@@ -13,6 +13,7 @@ docker compose up -d
 ### 2. Configure .env Variables
 
 For **local Mailpit**:
+
 ```env
 SMTP_HOST=localhost
 SMTP_PORT=1025
@@ -20,6 +21,7 @@ EMAIL_FROM=noreply@localhost
 ```
 
 For **Mailtrap cloud** (production/staging):
+
 ```env
 SMTP_HOST=sandbox.smtp.mailtrap.io
 SMTP_PORT=2525
@@ -78,13 +80,13 @@ Mailpit is configured in `docker-compose.yml`:
 
 ## 🌍 Mailtrap vs Mailpit
 
-| Feature | Mailpit (local) | Mailtrap (cloud) |
-|---------|----------------|------------------|
-| Speed | ⚡ Very fast | 🐌 Depends on internet |
-| Cost | ✅ Free | 💰 Has free tier limits |
-| Offline | ✅ Yes | ❌ No |
-| Setup | 🐳 Docker | 🔑 API keys |
-| Production | ❌ No | ✅ Yes |
+| Feature    | Mailpit (local) | Mailtrap (cloud)        |
+| ---------- | --------------- | ----------------------- |
+| Speed      | ⚡ Very fast    | 🐌 Depends on internet  |
+| Cost       | ✅ Free         | 💰 Has free tier limits |
+| Offline    | ✅ Yes          | ❌ No                   |
+| Setup      | 🐳 Docker       | 🔑 API keys             |
+| Production | ❌ No           | ✅ Yes                  |
 
 **For development:** Use **Mailpit**  
 **For production:** Use **Mailtrap** or another SMTP provider (SendGrid, AWS SES, Resend)

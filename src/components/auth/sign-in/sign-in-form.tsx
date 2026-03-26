@@ -14,12 +14,10 @@ import LoadingButton from "@/components/loading-button";
 
 import Link from "next/link";
 
-import { signInSchema, signUpSchema } from "@/auth/auth.schema";
+import { signInSchema } from "@/auth/auth.schema";
 import { z } from "zod";
 
 import { useSignInForm } from "./use-sign-in-form";
-import { cn } from "@/lib/utils";
-import { GithubIcon } from "lucide-react";
 
 export function SignInForm({
   className,
@@ -78,6 +76,7 @@ export function SignInForm({
           <LoadingButton
             pending={pendingGithub}
             onClick={handleSignInWithGithub}
+            data-testid="sign-in-submit"
           >
             <span className="w-4 h-4 mr-2">
               <svg

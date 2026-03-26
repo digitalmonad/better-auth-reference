@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button";
+
 export default function LoadingButton({
   pending,
   children,
   onClick,
+  ...props
 }: {
   pending: boolean;
   children: React.ReactNode;
   onClick?: () => void;
-}) {
+} & React.ComponentProps<typeof Button>) {
   return (
     <Button
       onClick={onClick}
@@ -15,6 +17,7 @@ export default function LoadingButton({
       className="w-full"
       type="submit"
       disabled={pending}
+      {...props}
     >
       {pending ? (
         <div className="flex items-center justify-center">

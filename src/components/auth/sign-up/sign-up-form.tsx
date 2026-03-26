@@ -48,8 +48,8 @@ export function SignUpForm() {
                           field.includes("password")
                             ? "password"
                             : field === "email"
-                            ? "email"
-                            : "text"
+                              ? "email"
+                              : "text"
                         }
                         placeholder={`Enter your ${field}`}
                         {...fieldProps}
@@ -61,7 +61,9 @@ export function SignUpForm() {
                 )}
               />
             ))}
-            <LoadingButton pending={pending}>Sign up</LoadingButton>
+            <LoadingButton pending={pending} data-testid="sign-up-submit">
+              Sign up
+            </LoadingButton>
           </form>
         </Form>
         <div className="mt-4 text-center text-sm">
