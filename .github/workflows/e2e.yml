@@ -42,6 +42,11 @@ jobs:
           echo "SMTP_HOST=localhost" >> .env
           echo "SMTP_PORT=1025" >> .env
 
+      - name: Generate Prisma Client and setup database
+        run: |
+          pnpm prisma generate
+          pnpm prisma db push --accept-data-loss
+
       - name: Run Playwright tests
         run: pnpm test:e2e
 
