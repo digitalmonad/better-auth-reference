@@ -64,3 +64,112 @@ export async function signOut(page: Page) {
 export async function waitForNavigation(page: Page, url: string) {
   await page.waitForURL(url);
 }
+
+/**
+ * Mailpit API types
+ */
+interface MailpitMessage {
+  ID: string;
+  From: { Address: string; Name: string };
+  To: Array<{ Address: string; Name: string }>;
+  Subject: string;
+  Date: string;
+  Size: number;
+  Snippet: string;
+}
+
+interface MailpitMessagesResponse {
+  total: number;
+  unread: number;
+  count: number;
+  messages: MailpitMessage[];
+}
+
+interface MailpitMessageDetail {
+  ID: string;
+  From: { Address: string; Name: string };
+  To: Array<{ Address: string; Name: string }>;
+  Subject: string;
+  Text: string;
+  HTML: string;
+  Date: string;
+}
+
+/**
+ * Get Mailpit API base URL
+ */
+function getMailpitUrl(): string {
+  return process.env.MAILPIT_URL || "http://localhost:8025";
+}
+
+/**
+ * Delete all emails in Mailpit
+ */
+export async function clearMailbox(): Promise<void> {
+  const url = `${getMailpitUrl()}/api/v1/messages`;
+  await fetch(url, { method: "DELETE" });
+}
+
+/**
+ * Get all messages from Mailpit
+ */
+export async function getMessages(): Promise<MailpitMessage[]> {
+  const url = `${getMailpitUrl()}/api/v1/messages`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch messages: ${response.statusText}`);
+  }
+
+  const data: MailpitMessagesResponse = await response.json();
+  return data.messages || [];
+}
+
+/**
+ * Get a specific message by ID
+ */
+export async function getMessage(id: string): Promise<MailpitMessageDetail> {
+  const url = `${getMailpitUrl()}/api/v1/message/${id}`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch message: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+/**
+ * Wait for an email to arrive in Mailpit
+ * @param recipientEmail - Email address to check
+ * @param subject - Optional subject to match
+ * @param timeoutMs - Timeout in milliseconds (default: 10000)
+ * @returns The message detail
+ */
+export async function waitForEmail(
+  recipientEmail: string,
+  subject?: string,
+  timeoutMs = 10000,
+): Promise<MailpitMessageDetail> {
+  const startTime = Date.now();
+
+  while (Date.now() - startTime < timeoutMs) {
+    const messages = await getMessages();
+    const foundMessage = messages.find((msg) => {
+      const toMatch = msg.To.some((to) => to.Address === recipientEmail);
+      const subjectMatch = subject ? msg.Subject.includes(subject) : true;
+      return toMatch && subjectMatch;
+    });
+
+    if (foundMessage) {
+      return await getMessage(foundMessage.ID);
+    }
+
+    // Wait 500ms before checking again
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+
+  throw new Error(
+    `Email not found for ${recipientEmail}${subject ? ` with subject "${subject}"` : ""} within ${timeoutMs}ms`,
+  );
+}

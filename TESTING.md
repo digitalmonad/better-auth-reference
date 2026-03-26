@@ -78,6 +78,82 @@ The Playwright configuration is in `playwright.config.ts`:
    - Password reset flow
    - Form validation
 
+3. **Email Tests** (`e2e/email.spec.ts`)
+   - Verification email on sign up
+   - Password reset email
+   - Email content validation
+
+## 📧 Email Testing with Mailpit
+
+This project uses [Mailpit](https://github.com/axllent/mailpit) for testing email functionality.
+
+### Local Development
+
+1. **Start Mailpit**:
+
+   ```bash
+   docker compose up -d
+   ```
+
+2. **Access Web UI**: http://localhost:8025
+
+3. **Run Email Tests**:
+   ```bash
+   pnpm test:e2e e2e/email.spec.ts
+   ```
+
+### CI/CD
+
+In CI, Mailpit runs automatically as a service container. The tests use the Mailpit API to:
+
+- Wait for emails to arrive
+- Verify email content
+- Extract verification links
+- Clear mailbox between tests
+
+### Email Test Helpers
+
+Available helper functions in `e2e/helpers.ts`:
+
+```typescript
+// Clear all emails in Mailpit
+await clearMailbox();
+
+// Wait for a specific email to arrive
+const email = await waitForEmail(
+  "user@example.com",
+  "Subject line", // optional
+  15000, // timeout in ms
+);
+
+// Get all messages
+const messages = await getMessages();
+
+// Get a specific message
+const message = await getMessage(messageId);
+```
+
+### Example Email Test
+
+```typescript
+test("should send verification email", async ({ page }) => {
+  const userData = generateTestUser();
+
+  // Clear mailbox before test
+  await clearMailbox();
+
+  // Trigger email (e.g., sign up)
+  await page.goto("/sign-up");
+  await page.getByLabel(/email/i).fill(userData.email);
+  // ... fill other fields and submit
+
+  // Wait for email and verify
+  const email = await waitForEmail(userData.email, "Verify", 15000);
+  expect(email.Subject).toBe("Verify your email address");
+  expect(email.Text).toContain("verification link");
+});
+```
+
 ## 📊 Reporting
 
 After running tests, view the HTML report:
